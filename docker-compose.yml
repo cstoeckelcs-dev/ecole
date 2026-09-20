@@ -1,0 +1,167 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ecole-postgres
+    environment:
+      POSTGRES_DB: ecole
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ecole-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Eureka Server
+  eureka-server:
+    build:
+      context: ./backend/eureka-server
+      dockerfile: Dockerfile
+    container_name: ecole-eureka
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ecole-network
+    restart: unless-stopped
+
+  # Config Server
+  config-server:
+    build:
+      context: ./backend/config-server
+      dockerfile: Dockerfile
+    container_name: ecole-config
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=native
+      - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCHLOCATIONS=file:///config
+    volumes:
+      - ./backend/config-server/src/main/resources/config:/config
+    depends_on:
+      eureka-server:
+        condition: service_started
+    networks:
+      - ecole-network
+    restart: unless-stopped
+
+  # API Gateway
+  gateway:
+    build:
+      context: ./backend/gateway
+      dockerfile: Dockerfile
+    container_name: ecole-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    networks:
+      - ecole-network
+    restart: unless-stopped
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile
+    container_name: ecole-auth
+    ports:
+      - "9001:9001"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ecole_auth
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - APP_JWT_SECRET=ecoleSuperSecretKeyForJWTTokenGenerationThatIsAtLeast256BitsLong12345
+      - APP_JWT_EXPIRATION=86400000
+      - APP_GOOGLE_CLIENT-ID=${GOOGLE_CLIENT_ID}
+      - APP_GOOGLE_CLIENT-SECRET=${GOOGLE_CLIENT_SECRET}
+      - APP_GOOGLE_REDIRECT-URI=http://localhost:4200/login/google
+    depends_on:
+      postgres:
+        condition: service_healthy
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    networks:
+      - ecole-network
+    restart: unless-stopped
+
+  # School Service
+  school-service:
+    build:
+      context: ./backend/school-service
+      dockerfile: Dockerfile
+    container_name: ecole-school
+    ports:
+      - "9002:9002"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ecole_school
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_MAIL_HOST=smtp.gmail.com
+      - SPRING_MAIL_PORT=587
+      - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
+      - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
+      - APP_UPLOAD-DIR=/uploads
+    volumes:
+      - ./uploads:/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    networks:
+      - ecole-network
+    restart: unless-stopped
+
+  # Angular Frontend
+  frontend:
+    build:
+      context: ./frontend/ecole-frontend
+      dockerfile: Dockerfile
+    container_name: ecole-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      gateway:
+        condition: service_started
+    networks:
+      - ecole-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  uploads:
+
+networks:
+  ecole-network:
+    driver: bridge
