@@ -89,7 +89,7 @@ services:
       - "9001:9001"
     environment:
       - SPRING_APPLICATION_NAME=auth-service
-      - SPRING_CONFIG_IMPORT=configserver:
+      - "SPRING_CONFIG_IMPORT=configserver:"
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
@@ -122,7 +122,7 @@ services:
       - "9002:9002"
     environment:
       - SPRING_APPLICATION_NAME=school-service
-      - SPRING_CONFIG_IMPORT=configserver:
+      - "SPRING_CONFIG_IMPORT=configserver:"
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
