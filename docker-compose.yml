@@ -24,8 +24,8 @@ services:
   # Eureka Server
   eureka-server:
     build:
-      context: ./backend/eureka-server
-      dockerfile: Dockerfile
+      context: ./backend
+      dockerfile: eureka-server/Dockerfile
     container_name: ecole-eureka
     ports:
       - "8761:8761"
@@ -41,8 +41,8 @@ services:
   # Config Server
   config-server:
     build:
-      context: ./backend/config-server
-      dockerfile: Dockerfile
+      context: ./backend
+      dockerfile: config-server/Dockerfile
     container_name: ecole-config
     ports:
       - "8888:8888"
@@ -61,8 +61,8 @@ services:
   # API Gateway
   gateway:
     build:
-      context: ./backend/gateway
-      dockerfile: Dockerfile
+      context: ./backend
+      dockerfile: gateway/Dockerfile
     container_name: ecole-gateway
     ports:
       - "8080:8080"
@@ -82,8 +82,8 @@ services:
   # Auth Service
   auth-service:
     build:
-      context: ./backend/auth-service
-      dockerfile: Dockerfile
+      context: ./backend
+      dockerfile: auth-service/Dockerfile
     container_name: ecole-auth
     ports:
       - "9001:9001"
@@ -113,8 +113,8 @@ services:
   # School Service
   school-service:
     build:
-      context: ./backend/school-service
-      dockerfile: Dockerfile
+      context: ./backend
+      dockerfile: school-service/Dockerfile
     container_name: ecole-school
     ports:
       - "9002:9002"
