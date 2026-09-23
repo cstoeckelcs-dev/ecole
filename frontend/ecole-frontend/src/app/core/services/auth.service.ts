@@ -92,13 +92,13 @@ export class AuthService {
 
   hasRole(role: string): boolean {
     const user = this.currentUserSubject.value;
-    return user?.role === role || user?.authorities?.includes(role);
+    return user?.role === role || !!user?.authorities?.includes(role);
   }
 
   hasAnyRole(roles: string[]): boolean {
     const user = this.currentUserSubject.value;
     return roles.includes(user?.role || '') || 
-           user?.authorities?.some(auth => roles.includes(auth));
+           !!user?.authorities?.some(auth => roles.includes(auth));
   }
 
   getAccessToken(): string | null {
