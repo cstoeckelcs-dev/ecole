@@ -20,6 +20,8 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     List<Teacher> findBySchoolId(Long schoolId);
     List<Teacher> findByIsApproved(Boolean isApproved);
     List<Teacher> findByIsActive(Boolean isActive);
+    long countByIsApproved(boolean isApproved);
+    long countByIsActive(boolean isActive);
     List<Teacher> findBySpecializationContainingIgnoreCase(String specialization);
     List<Teacher> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(String firstName, String lastName);
 

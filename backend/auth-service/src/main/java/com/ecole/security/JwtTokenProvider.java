@@ -22,6 +22,10 @@ public class JwtTokenProvider {
     @Value("${app.jwt.expiration}")
     private Long jwtExpiration;
 
+    public Long getJwtExpiration() {
+        return jwtExpiration;
+    }
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }

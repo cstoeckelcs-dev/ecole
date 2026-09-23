@@ -121,7 +121,7 @@ public class AuthService {
 
     public void logout(String refreshToken) {
         RefreshToken token = refreshTokenRepository.findByToken(refreshToken)
-            .orElseReturn(null);
+            .orElse(null);
         if (token != null) {
             refreshTokenRepository.delete(token);
         }
