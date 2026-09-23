@@ -52,6 +52,12 @@ services:
       - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCHLOCATIONS=file:///config/{application}
     volumes:
       - ./backend/config-server/src/main/resources/config:/config
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8888"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
     depends_on:
       eureka-server:
         condition: service_started
@@ -73,7 +79,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
       config-server:
-        condition: service_started
+        condition: service_healthy
       eureka-server:
         condition: service_started
     networks:
@@ -106,7 +112,7 @@ services:
       postgres:
         condition: service_healthy
       config-server:
-        condition: service_started
+        condition: service_healthy
       eureka-server:
         condition: service_started
     networks:
@@ -141,7 +147,7 @@ services:
       postgres:
         condition: service_healthy
       config-server:
-        condition: service_started
+        condition: service_healthy
       eureka-server:
         condition: service_started
     networks:
