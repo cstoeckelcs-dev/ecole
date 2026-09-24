@@ -117,7 +117,7 @@ ng serve
 ## 🔐 Default Super Admin
 
 - **Email:** superadmin@ecole.com
-- **Password:** SuperAdmin@123
+- **Password:** SuperAdmin123!
 
 ## 🌐 API Endpoints
 
