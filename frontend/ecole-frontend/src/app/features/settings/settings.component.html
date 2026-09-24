@@ -1,0 +1,15 @@
+<div class="settings-page">
+  <h1>Paramètres</h1>
+
+  <mat-card>
+    <mat-card-content>
+      <p>Compte connecté : <strong>{{ authService.currentUser?.email }}</strong></p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="warn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Se déconnecter
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -13,6 +13,10 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
+  get currentUser(): User | null {
+    return this.currentUserSubject.value;
+  }
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -56,7 +60,9 @@ export class AuthService {
 
   refreshToken(): Observable<TokenResponse> {
     const refreshToken = this.cookieService.get('refreshToken');
-    return this.http.post<TokenResponse>(`${this.API_URL}/refresh`, { refreshToken }).pipe(
+    return this.http.post<TokenResponse>(`${this.API_URL}/refresh`, {}, {
+      params: { refreshToken }
+    }).pipe(
       tap((response) => {
         this.setTokens(response);
       })
@@ -65,7 +71,9 @@ export class AuthService {
 
   logout(): void {
     const refreshToken = this.cookieService.get('refreshToken');
-    this.http.post(`${this.API_URL}/logout`, { refreshToken }).subscribe({
+    this.http.post(`${this.API_URL}/logout`, {}, {
+      params: { refreshToken }
+    }).subscribe({
       next: () => {
         this.clearAuth();
         this.router.navigate(['/login']);

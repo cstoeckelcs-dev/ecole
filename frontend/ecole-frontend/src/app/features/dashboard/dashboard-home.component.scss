@@ -1,0 +1,48 @@
+.dashboard-home {
+  h1 {
+    margin: 0 0 4px;
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+
+  .welcome {
+    margin: 0 0 24px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  text-align: center;
+
+  .stat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    color: #3f51b5;
+
+    &.approved { color: #2e7d32; }
+    &.pending { color: #ef6c00; }
+    &.active { color: #1565c0; }
+  }
+
+  .stat-value {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  .stat-label {
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.actions {
+  margin-top: 8px;
+}

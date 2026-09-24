@@ -4,10 +4,16 @@ import com.ecole.dto.LoginRequest;
 import com.ecole.dto.RegisterRequest;
 import com.ecole.dto.TokenResponse;
 import com.ecole.dto.UserResponse;
+import com.ecole.model.User;
+import com.ecole.repository.UserRepository;
 import com.ecole.service.AuthService;
 import com.ecole.service.GoogleAuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +23,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final GoogleAuthService googleAuthService;
+    private final UserRepository userRepository;
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request) {
@@ -56,7 +63,13 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentUser() {
-        // Implementation to get current user from security context
-        return ResponseEntity.ok(null);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()
+                || !(authentication.getPrincipal() instanceof UserDetails principal)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User user = userRepository.findByEmail(principal.getUsername())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        return ResponseEntity.ok(UserResponse.fromUser(user));
     }
 }

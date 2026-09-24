@@ -1,0 +1,54 @@
+<div class="dashboard-home">
+  <h1>Tableau de bord</h1>
+  <p class="welcome">Bienvenue, {{ userFirstName }}</p>
+
+  @if (loading) {
+    <p>Chargement des statistiques...</p>
+  } @else if (stats) {
+    <div class="stats-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <mat-icon class="stat-icon">school</mat-icon>
+          <div class="stat-value">{{ stats.totalSchools }}</div>
+          <div class="stat-label">Écoles au total</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <mat-icon class="stat-icon approved">check_circle</mat-icon>
+          <div class="stat-value">{{ stats.approvedSchools }}</div>
+          <div class="stat-label">Écoles approuvées</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <mat-icon class="stat-icon pending">schedule</mat-icon>
+          <div class="stat-value">{{ stats.pendingSchools }}</div>
+          <div class="stat-label">En attente d'approbation</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <mat-icon class="stat-icon active">toggle_on</mat-icon>
+          <div class="stat-value">{{ stats.activeSchools }}</div>
+          <div class="stat-label">Écoles actives</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  } @else {
+    <mat-card>
+      <mat-card-content>
+        Les statistiques des écoles ne sont pas disponibles pour le moment.
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (canManageSchools) {
+    <div class="actions">
+      <a mat-raised-button color="primary" routerLink="/schools">
+        <mat-icon>school</mat-icon>
+        Gérer les écoles
+      </a>
+    </div>
+  }
+</div>
