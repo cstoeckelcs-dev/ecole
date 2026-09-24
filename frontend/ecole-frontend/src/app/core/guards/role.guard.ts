@@ -1,59 +1,24 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class RoleGuard implements CanActivate {
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) { }
+export const roleGuard = (roles: string[]): CanActivateFn => (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean {
-    const requiredRoles = route.data['roles'] as string[];
-    
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login'], {
-        queryParams: { returnUrl: state.url }
-      });
-      return false;
-    }
-
-    if (!requiredRoles || requiredRoles.length === 0) {
-      return true;
-    }
-
-    if (this.authService.hasAnyRole(requiredRoles)) {
-      return true;
-    }
-
-    this.router.navigate(['/dashboard']);
+  if (!authService.isAuthenticated()) {
+    router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
     return false;
   }
-}
 
-export const roleGuard = (roles: string[]): any => {
-  return (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean => {
-    const authService = new AuthService(
-      {} as any,
-      {} as any,
-      {} as any
-    );
-    const router = {} as any;
-    
-    if (!authService.isAuthenticated()) {
-      return false;
-    }
+  if (!roles || roles.length === 0) {
+    return true;
+  }
 
-    if (!roles || roles.length === 0) {
-      return true;
-    }
+  if (authService.hasAnyRole(roles)) {
+    return true;
+  }
 
-    return authService.hasAnyRole(roles);
-  };
+  router.navigate(['/dashboard']);
+  return false;
 };

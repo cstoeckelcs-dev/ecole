@@ -3,6 +3,7 @@ package com.ecole.controller;
 import com.ecole.dto.SchoolRequest;
 import com.ecole.dto.SchoolResponse;
 import com.ecole.service.SchoolService;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -79,7 +80,7 @@ public class SchoolController {
     public ResponseEntity<SchoolResponse> uploadLogo(
         @PathVariable Long id,
         @RequestParam MultipartFile file
-    ) {
+    ) throws IOException {
         SchoolResponse response = schoolService.uploadLogo(id, file);
         return ResponseEntity.ok(response);
     }

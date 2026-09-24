@@ -23,6 +23,8 @@ public interface SchoolRepository extends JpaRepository<School, Long> {
 
     List<School> findByIsApproved(Boolean isApproved);
     List<School> findByIsActive(Boolean isActive);
+    long countByIsApproved(boolean isApproved);
+    long countByIsActive(boolean isActive);
     List<School> findByType(School.SchoolType type);
     List<School> findByLevel(School.SchoolLevel level);
     List<School> findByCityContainingIgnoreCase(String city);

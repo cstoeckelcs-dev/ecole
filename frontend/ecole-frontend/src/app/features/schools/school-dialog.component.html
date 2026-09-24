@@ -1,0 +1,141 @@
+<h2 mat-dialog-title>
+  {{ isEditMode ? 'Modifier l\'école' : 'Ajouter une école' }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="schoolForm" class="school-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="name" required>
+        <mat-error>Nom requis</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type" required>
+          @for (type of schoolTypes; track type) {
+            <mat-option [value]="type">{{ type }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Niveau</mat-label>
+        <mat-select formControlName="level" required>
+          @for (level of schoolLevels; track level) {
+            <mat-option [value]="level">{{ level }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Date de fondation</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="foundedDate" required>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error>Date requise</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Adresse</mat-label>
+        <input matInput formControlName="address" required>
+        <mat-error>Adresse requise</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row three">
+      <mat-form-field appearance="outline">
+        <mat-label>Ville</mat-label>
+        <input matInput formControlName="city" required>
+        <mat-error>Ville requise</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Code postal</mat-label>
+        <input matInput formControlName="postalCode" required>
+        <mat-error>Code postal requis</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pays</mat-label>
+        <input matInput formControlName="country" required>
+        <mat-error>Pays requis</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" required>
+        <mat-error>Email valide requis</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Téléphone</mat-label>
+        <input matInput formControlName="phone" required>
+        <mat-error>Téléphone requis</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Site web</mat-label>
+        <input matInput formControlName="website">
+      </mat-form-field>
+    </div>
+
+    <div class="form-row three">
+      <mat-form-field appearance="outline">
+        <mat-label>Nom du directeur</mat-label>
+        <input matInput formControlName="principalName" required>
+        <mat-error>Nom requis</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email du directeur</mat-label>
+        <input matInput formControlName="principalEmail" type="email" required>
+        <mat-error>Email valide requis</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Téléphone du directeur</mat-label>
+        <input matInput formControlName="principalPhone" required>
+        <mat-error>Téléphone requis</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Numéro d'accréditation</mat-label>
+        <input matInput formControlName="accreditationNumber" required>
+        <mat-error>Numéro requis</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Numéro de licence</mat-label>
+        <input matInput formControlName="licenseNumber" required>
+        <mat-error>Numéro requis</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="4" required></textarea>
+        <mat-error>Description requise</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button mat-raised-button color="primary" [disabled]="schoolForm.invalid" (click)="onSave()">
+    {{ isEditMode ? 'Enregistrer' : 'Créer' }}
+  </button>
+</mat-dialog-actions>

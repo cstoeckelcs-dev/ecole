@@ -1,0 +1,43 @@
+.teachers-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.page-header {
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+}
+
+.table-card {
+  table {
+    width: 100%;
+  }
+}
+
+.no-data {
+  padding: 24px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  &.approved {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &.pending {
+    background-color: #fff3e0;
+    color: #ef6c00;
+  }
+}

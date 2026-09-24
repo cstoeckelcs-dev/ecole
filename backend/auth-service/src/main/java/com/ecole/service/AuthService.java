@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -36,6 +37,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;
 
+    @Transactional
     public TokenResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -107,6 +109,7 @@ public class AuthService {
 
     private RefreshToken createRefreshToken(User user) {
         refreshTokenRepository.deleteByUserId(user.getId());
+        refreshTokenRepository.flush();
 
         Instant expiryDate = Instant.now().plusMillis(7 * 24 * 60 * 60 * 1000); // 7 days
 
@@ -119,9 +122,10 @@ public class AuthService {
         return refreshTokenRepository.save(refreshToken);
     }
 
+    @Transactional
     public void logout(String refreshToken) {
         RefreshToken token = refreshTokenRepository.findByToken(refreshToken)
-            .orElseReturn(null);
+            .orElse(null);
         if (token != null) {
             refreshTokenRepository.delete(token);
         }

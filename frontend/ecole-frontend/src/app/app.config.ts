@@ -4,7 +4,6 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { provideToastr } from 'ngx-toastr';
-import { provideNgxSpinner } from 'ngx-spinner';
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -39,8 +38,9 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatGridListModule } from '@angular/material/grid-list';
 
-import { SocialAuthServiceConfig } from 'angularx-social-login';
-import { GoogleLoginProvider } from 'angularx-social-login';
+import { SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
+import { provideSpinnerConfig } from 'ngx-spinner';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -52,7 +52,7 @@ export const appConfig: ApplicationConfig = {
       positionClass: 'toast-top-right',
       preventDuplicates: true
     }),
-    provideNgxSpinner({
+    provideSpinnerConfig({
       type: 'ball-scale-multiple'
     }),
     importProvidersFrom([

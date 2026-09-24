@@ -1,0 +1,44 @@
+<div class="dashboard-container">
+  <mat-toolbar color="primary" class="dashboard-toolbar">
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span class="app-title">Ecole</span>
+    <span class="spacer"></span>
+    <span class="user-info">{{ userDisplayName }}</span>
+    <button mat-icon-button (click)="logout()" title="Déconnexion">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav mode="side" opened class="dashboard-sidenav">
+      <mat-nav-list>
+        <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle>Tableau de bord</span>
+        </a>
+        <a mat-list-item routerLink="/schools" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>school</mat-icon>
+          <span matListItemTitle>Écoles</span>
+        </a>
+        <a mat-list-item routerLink="/teachers" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>people</mat-icon>
+          <span matListItemTitle>Enseignants</span>
+        </a>
+        <a mat-list-item routerLink="/profile" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>person</mat-icon>
+          <span matListItemTitle>Profil</span>
+        </a>
+        <a mat-list-item routerLink="/settings" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>settings</mat-icon>
+          <span matListItemTitle>Paramètres</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="dashboard-content">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
